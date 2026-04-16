@@ -4,6 +4,7 @@
 import redis
 import json
 import time
+import os
 
 def main():
     try:
@@ -15,8 +16,9 @@ def main():
 
     # Load already reported IDs
     reported = set()
+    report_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.reported_ids')
     try:
-        with open('/Users/kyle/.shared/cfm/.reported_ids', 'r') as f:
+        with open(report_file, 'r') as f:
             reported = set(line.strip() for line in f if line.strip())
     except:
         pass

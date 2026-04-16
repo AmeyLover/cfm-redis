@@ -10,5 +10,5 @@ CHANEL已完成heartbeat优化，主要内容：
 
 -- 由Hermes CFM监听器自动汇报"""
 
-quick_send('hermes', 'chanel', msg)
+quick_send('hermes', msg, 'chanel')
 print('消息已发送给CHANEL，请求转告贾老师')

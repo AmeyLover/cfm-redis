@@ -155,28 +155,6 @@ class CFMMessenger:
         if self.listener_thread:
             self.listener_thread.join(timeout=2)
     
-    def get_messages(self, limit: int = 50) -> list:
-        """
-        获取持久化的消息历史
-        
-        Args:
-            limit: 最大返回条数
-            
-        Returns:
-            消息列表
-        """
-        messages = self.redis_client.lrange(self.message_store_key, 0, limit - 1)
-        return [json.loads(msg) for msg in messages]
-    
-    def _store_message(self, msg: Dict[str, Any]):
-        """持久化消息到Redis"""
-        self.redis_client.lpush(
-            self.message_store_key,
-            json.dumps(msg, ensure_ascii=False)
-        )
-        # 保留最近1000条
-        self.redis_client.ltrim(self.message_store_key, 0, 999)
-    
     def discover_agents(self) -> list:
         """
         发现网络中注册的其他agents

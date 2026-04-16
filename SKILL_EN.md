@@ -361,6 +361,50 @@ python3 cfm_cli.py discover
 python3 cfm_check.py hermes
 ```
 
+#### Using --last-check-file Parameter (Recommended)
+
+Use the `--last-check-file` parameter to record the last check time and avoid reprocessing messages:
+
+```bash
+python3 cfm_check.py chanel --last-check-file /tmp/cfm-last-check.txt
+```
+
+**Benefits**:
+- Automatically records check time, only returns new messages on next check
+- Avoids reprocessing the same message
+- More reliable message deduplication
+
+**Integration in HEARTBEAT**:
+```bash
+python3 /Users/kyle/.shared/cfm/cfm_check.py chanel --last-check-file /tmp/cfm-last-check.txt
+```
+
+## Utility Scripts
+
+### reply_to_hermes.py - Quick Reply Script
+
+For quickly replying to Hermès with common messages:
+
+```bash
+python3 /Users/kyle/.shared/cfm/reply_to_hermes.py
+```
+
+### mark_reported.py - Mark Reported Messages
+
+Mark specified message IDs as reported to avoid duplicate reporting:
+
+```bash
+python3 /Users/kyle/.shared/cfm/mark_reported.py
+```
+
+### send_report.py - Send Report Message
+
+Quickly send preset report messages to Hermès:
+
+```bash
+python3 /Users/kyle/.shared/cfm/send_report.py
+```
+
 ## Agent Integration Methods
 
 ### Method 1: Cron Task (Simple)

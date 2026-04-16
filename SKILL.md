@@ -7,7 +7,7 @@ metadata:
       bins:
         - redis-server
         - python3
-    homepage: https://github.com/hermes-agent/cfm-redis
+    homepage: https://github.com/AmeyLover/cfm-redis
     install:
       pip: redis
 ---
@@ -359,6 +359,50 @@ python3 cfm_cli.py discover
 
 ```bash
 python3 cfm_check.py hermes
+```
+
+#### 使用--last-check-file参数（推荐）
+
+使用`--last-check-file`参数可以记录上次检查时间，避免重复处理消息：
+
+```bash
+python3 cfm_check.py chanel --last-check-file /tmp/cfm-last-check.txt
+```
+
+**优点**：
+- 自动记录检查时间，下次检查只返回新消息
+- 避免重复处理同一条消息
+- 更可靠的消息去重机制
+
+**在HEARTBEAT中集成**：
+```bash
+python3 /Users/kyle/.shared/cfm/cfm_check.py chanel --last-check-file /tmp/cfm-last-check.txt
+```
+
+## 辅助工具脚本
+
+### reply_to_hermes.py - 快速回复脚本
+
+用于快速回复Hermès的常用消息：
+
+```bash
+python3 /Users/kyle/.shared/cfm/reply_to_hermes.py
+```
+
+### mark_reported.py - 标记已报告消息
+
+将指定的消息ID标记为已报告，避免重复汇报：
+
+```bash
+python3 /Users/kyle/.shared/cfm/mark_reported.py
+```
+
+### send_report.py - 发送汇报消息
+
+快速发送预设的汇报消息给Hermès：
+
+```bash
+python3 /Users/kyle/.shared/cfm/send_report.py
 ```
 
 ## Agent集成方式

@@ -361,22 +361,31 @@ python3 cfm_cli.py discover
 python3 cfm_check.py hermes
 ```
 
-#### 使用--last-check-file参数（推荐）
+#### ⚠️ 使用--last-check-file参数（必须！）
 
-使用`--last-check-file`参数可以记录上次检查时间，避免重复处理消息：
+**重要**：在cron job或heartbeat中使用`cfm_check.py`时，**必须**使用`--last-check-file`参数，否则会导致重复汇报问题！
 
 ```bash
 python3 cfm_check.py chanel --last-check-file /tmp/cfm-last-check.txt
 ```
 
-**优点**：
-- 自动记录检查时间，下次检查只返回新消息
-- 避免重复处理同一条消息
-- 更可靠的消息去重机制
+**踩坑经验（2026-04-18）**：
+- 之前使用`cfm_listener.py`没有去重逻辑，每次运行都会打印最近10条消息
+- 导致用户收到大量重复的旧消息汇报
+- 改用`cfm_check.py` + `--last-check-file`后解决
 
-**在HEARTBEAT中集成**：
+**去重机制原理**：
+1. 首次运行：记录当前时间到`.last_check`文件
+2. 后续运行：读取`.last_check`中的时间，只返回该时间之后的消息
+3. 运行结束后：更新`.last_check`为当前时间
+
+**正确配置（Cron Job）**：
 ```bash
-python3 /Users/kyle/.shared/cfm/cfm_check.py chanel --last-check-file /tmp/cfm-last-check.txt
+# ❌ 错误：没有去重，会重复汇报
+*/5 * * * * cd ~/.shared/cfm && python3 cfm_listener.py
+
+# ✅ 正确：使用--last-check-file去重
+*/5 * * * * cd ~/.shared/cfm && python3 cfm_check.py chanel --last-check-file ~/.cfm/.last_check_chanel
 ```
 
 ## 辅助工具脚本
